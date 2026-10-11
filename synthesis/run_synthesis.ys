@@ -1,0 +1,31 @@
+# Yosys synthesis script for RCA and CLA ALUs
+# Run from project root: yosys synthesis/run_synthesis.ys
+
+read_verilog rtl/full_adder.v
+read_verilog rtl/ripple_carry_adder.v
+read_verilog rtl/alu_rca.v
+
+hierarchy -top alu_rca
+proc; opt; fsm; opt; memory; opt
+techmap; opt
+stat -width
+write_json reports/alu_rca.json
+write_verilog reports/alu_rca_synth.v
+
+# Clear design for second module
+design -reset
+
+read_verilog rtl/full_adder.v
+read_verilog rtl/carry_lookahead_adder.v
+read_verilog rtl/alu_cla.v
+
+hierarchy -top alu_cla
+proc; opt; fsm; opt; memory; opt
+techmap; opt
+stat -width
+write_json reports/alu_cla.json
+write_verilog reports/alu_cla_synth.v
+
+# Note: These stats are post-synthesis generic cell counts (area proxy).
+# They are not physical area, timing, or power.
+# Timing requires a liberty library + OpenSTA or similar.
