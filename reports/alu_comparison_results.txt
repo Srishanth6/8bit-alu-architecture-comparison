@@ -1,9 +1,11 @@
 8-bit ALU Architecture Comparison
 =================================
 
+Archived run
+------------
 Tool: Yosys 0.33
-Flow: synth -flatten; ltp -noff
-Mapping: Generic ABC gate library
+Flow: synth with flattening, followed by ltp -noff
+Mapping: Generic ABC gate mapping
 
 Metric                         RCA       CLA
 Generic mapped logic cells     287       398
@@ -14,12 +16,24 @@ Structural problems            0         0
 Logic-depth reduction:
 ((29 - 19) / 29) * 100 = 34.48%
 
-Conclusion:
-The CLA implementation has a lower reported topological logic
-depth but uses more generic mapped logic cells than the RCA.
+Conclusion from the archived run:
+The CLA implementation has a lower reported topological logic depth
+but uses more generic mapped logic cells than the RCA.
 
-Limitations:
-These results do not establish physical area, power consumption,
-or propagation delay in nanoseconds. Those require a suitable
-target cell library and appropriate implementation and timing
-analysis.
+Reproducibility status
+----------------------
+The synthesis script at synthesis/run_synthesis.ys has been aligned to
+synthesize each complete ALU with flattening, run check, collect stat
+and ltp -noff output, and save per-ALU logs. The archived values above
+have not yet been regenerated from that updated script. Re-run the
+script and compare reports/alu_rca_synthesis.log and
+reports/alu_cla_synthesis.log before treating the table as reproduced.
+Exact values may vary with Yosys/ABC versions.
+
+Limitations
+-----------
+These results do not establish physical area, power consumption, or
+propagation delay in nanoseconds. Those require a suitable target-cell
+library, constraints, and appropriate technology-specific implementation
+and timing analysis. Topological path length is a logic-depth metric,
+not a clock period or a delay measurement.
