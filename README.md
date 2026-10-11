@@ -99,6 +99,12 @@ The reported longest topological path decreased from 29 to 19 levels, a reductio
 
 In this synthesis run, the CLA used more generic mapped logic cells but had a shorter reported topological path. These metrics describe the complete ALU implementations, not isolated adder blocks.
 
+### Interpreting the RCA-versus-CLA Trade-off
+
+A ripple-carry adder computes each carry from the previous stage, so the carry dependency can extend through the 8-bit datapath. A carry-lookahead adder computes carries using generate/propagate relationships, reducing the dependency depth at the expense of more logic.
+
+That trade-off is reflected in the **archived generic synthesis run**: the complete CLA ALU has more generic mapped logic cells (398 versus 287), while its reported topological path is shorter (19 versus 29 levels). The path-length reduction is approximately 34.48%. This does not prove a 34.48% reduction in real circuit delay; actual timing depends on cell delays, loading, routing, and constraints.
+
 ### Limitations
 
 - Topological logic depth is not propagation delay in nanoseconds.
@@ -123,6 +129,21 @@ yosys -s synthesis/run_synthesis.ys
 - The recorded self-checking simulation reported 538 checks with zero failures.
 - The archived generic synthesis comparison shows a resource-versus-logic-depth trade-off: CLA uses more generic logic cells but has a shorter reported topological path.
 - Generic synthesis statistics do not establish physical area, power, or delay in nanoseconds.
+
+## Physical PPA: Scope and Measurement Plan
+
+The current results are **generic synthesis statistics**, not physical PPA results. No numerical physical area, power, or propagation-delay values are claimed in this project yet.
+
+To make a technology-specific comparison in a future iteration:
+
+1. Select a compatible standard-cell library and process corner.
+2. Define consistent timing constraints, including the clock/required path assumptions and input/output delays appropriate to the design.
+3. Synthesize both ALUs using the same tool, library, constraints, and optimization settings.
+4. Run static timing analysis and compare the critical-path delay in nanoseconds.
+5. Use a comparable physical-design flow for cell area and, where supported by suitable activity and load assumptions, power estimation.
+6. Record tool versions, constraints, library details, and both designs' reports so the comparison is reproducible.
+
+Until those steps are completed, leave physical area, power, and delay fields unreported rather than estimating them from generic cell counts or logic levels.
 
 ## Future Work
 
