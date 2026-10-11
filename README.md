@@ -67,7 +67,7 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 
 The self-checking testbench includes a behavioral reference model and checks the RCA and CLA outputs/flags against it. Its planned coverage includes arithmetic boundary cases, signed overflow, logical operations, shifts, all 16 opcodes, and reproducible randomized inputs.
 
-The current testbench is configured for 538 checks (32 directed checks and 494 randomized checks). **The latest testbench has not been confirmed to pass in this publishing step**, so do not treat the configured count as proof of a successful run.
+The testbench is configured for 538 checks (32 directed checks and 494 randomized checks). A previously shared EDA Playground run using Icarus Verilog 12.0 reported 538 checks with zero failures. Re-run the included script after any RTL or testbench changes to confirm the result for the current checkout.
 
 ### Run on Windows
 
@@ -82,7 +82,7 @@ A successful run should show zero failures and `ALL TESTS PASSED`.
 
 ## Generic Synthesis Comparison
 
-The saved comparison was generated using Yosys 0.33 with generic ABC mapping, a flattened synthesis flow, and `ltp -noff` for topological logic-depth analysis.
+The archived comparison below records a Yosys 0.33 run using generic ABC mapping, a flattened synthesis flow, and `ltp -noff` for topological logic-depth analysis. The updated script now follows that analysis sequence for both ALUs and writes per-ALU logs. The archived numbers have **not yet been freshly regenerated from the updated script**, so treat them as recorded results until you run the script and compare the new logs.
 
 | Metric | RCA ALU | CLA ALU |
 |---|---:|---:|
@@ -105,7 +105,7 @@ In this synthesis run, the CLA used more generic mapped logic cells but had a sh
 - Generic mapped cell count is not physical silicon area.
 - Power has not been measured.
 - Physical PPA requires an appropriate target-cell library, constraints, and technology-specific implementation/timing analysis.
-- The synthesis script in `synthesis/` emits generic post-synthesis statistics and output files; its flow is not identical to the flattened flow used for the table above.
+- Exact generic counts and logic-depth values can vary with Yosys/ABC versions. Re-run the script and inspect `reports/alu_rca_synthesis.log` and `reports/alu_cla_synthesis.log` before replacing the archived table.
 
 Details are in `reports/alu_comparison_results.txt`.
 
@@ -114,12 +114,13 @@ Details are in `reports/alu_comparison_results.txt`.
 With Yosys installed, run from the repository root:
 
 ```bash
-yosys synthesis/run_synthesis.ys
+yosys -s synthesis/run_synthesis.ys
 ```
 
 ## Future Work
 
-- Run and capture the latest self-checking simulation.
+- Re-run the self-checking simulation from the current checkout and preserve the console output.
+- Re-run the aligned synthesis script and reconcile the archived comparison table with the generated logs.
 - Add a technology-specific library and static timing analysis.
 - Compare physical area and power using a suitable implementation flow.
 - Explore hierarchical lookahead structures and wider ALUs.
