@@ -24,7 +24,7 @@ module alu_rca (
     );
 
     always @(*) begin
-        // Default values for reserved opcodes and non-arithmetic ops
+        // Default outputs for reserved opcodes and non-arithmetic operations.
         Y        = 8'h00;
         Carry    = 1'b0;
         Zero     = 1'b0;
@@ -32,52 +32,61 @@ module alu_rca (
         Overflow = 1'b0;
 
         case (opcode)
-            4'b0000: begin  // ADD
+            4'b0000: begin
                 Y        = add_sum;
                 Carry    = add_cout;
                 Zero     = (add_sum == 8'h00);
                 Negative = add_sum[7];
                 Overflow = (A[7] == B[7]) && (add_sum[7] != A[7]);
             end
-            4'b0001: begin  // SUB (A - B)
+
+            4'b0001: begin
                 Y        = sub_sum;
-                Carry    = ~sub_cout;           // Borrow = ~Cout of two's complement add
+                // Carry is defined as unsigned borrow for this project.
+                Carry    = (A < B);
                 Zero     = (sub_sum == 8'h00);
                 Negative = sub_sum[7];
                 Overflow = (A[7] != B[7]) && (sub_sum[7] != A[7]);
             end
-            4'b0010: begin  // AND
+
+            4'b0010: begin
                 Y = A & B;
                 Zero = (Y == 8'h00);
                 Negative = Y[7];
             end
-            4'b0011: begin  // OR
+
+            4'b0011: begin
                 Y = A | B;
                 Zero = (Y == 8'h00);
                 Negative = Y[7];
             end
-            4'b0100: begin  // XOR
+
+            4'b0100: begin
                 Y = A ^ B;
                 Zero = (Y == 8'h00);
                 Negative = Y[7];
             end
-            4'b0101: begin  // NOT A
+
+            4'b0101: begin
                 Y = ~A;
                 Zero = (Y == 8'h00);
                 Negative = Y[7];
             end
-            4'b0110: begin  // Logical left shift
+
+            4'b0110: begin
                 Y = A << 1;
                 Carry = A[7];
                 Zero = (Y == 8'h00);
                 Negative = Y[7];
             end
-            4'b0111: begin  // Logical right shift
+
+            4'b0111: begin
                 Y = A >> 1;
                 Carry = A[0];
                 Zero = (Y == 8'h00);
                 Negative = Y[7];
             end
+
             default: begin
                 Y = 8'h00;
                 Zero = 1'b1;
