@@ -1,0 +1,25 @@
+8-bit ALU Architecture Comparison
+=================================
+
+Tool: Yosys 0.33
+Flow: synth -flatten; ltp -noff
+Mapping: Generic ABC gate library
+
+Metric                         RCA       CLA
+Generic mapped logic cells     287       398
+Longest topological path       29        19
+Wires                          342       411
+Structural problems            0         0
+
+Logic-depth reduction:
+((29 - 19) / 29) * 100 = 34.48%
+
+Conclusion:
+The CLA implementation has a lower reported topological logic
+depth but uses more generic mapped logic cells than the RCA.
+
+Limitations:
+These results do not establish physical area, power consumption,
+or propagation delay in nanoseconds. Those require a suitable
+target cell library and appropriate implementation and timing
+analysis.
