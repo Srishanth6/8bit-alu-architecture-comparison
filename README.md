@@ -119,9 +119,16 @@ yosys -s synthesis/run_synthesis.ys
 
 ## Future Work
 
-- Re-run the self-checking simulation from the current checkout and preserve the console output.
-- Re-run the aligned synthesis script and reconcile the archived comparison table with the generated logs.
-- Add a technology-specific library and static timing analysis.
+### Key Takeaways
+
+- Implemented two 8-bit ALU architectures with the same operation set and status flags.
+- The recorded self-checking simulation reported 538 checks with zero failures.
+- The archived generic synthesis comparison shows a resource-versus-logic-depth trade-off: CLA uses more generic logic cells but has a shorter reported topological path.
+- Generic synthesis statistics do not establish physical area, power, or delay in nanoseconds.
+
+### Future Improvements
+
+- Add a technology-specific cell library and perform static timing analysis.
 - Compare physical area and power using a suitable implementation flow.
 - Explore hierarchical lookahead structures and wider ALUs.
 
