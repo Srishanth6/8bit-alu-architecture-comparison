@@ -117,16 +117,14 @@ With Yosys installed, run from the repository root:
 yosys -s synthesis/run_synthesis.ys
 ```
 
-## Future Work
-
-### Key Takeaways
+## Key Takeaways
 
 - Implemented two 8-bit ALU architectures with the same operation set and status flags.
 - The recorded self-checking simulation reported 538 checks with zero failures.
 - The archived generic synthesis comparison shows a resource-versus-logic-depth trade-off: CLA uses more generic logic cells but has a shorter reported topological path.
 - Generic synthesis statistics do not establish physical area, power, or delay in nanoseconds.
 
-### Future Improvements
+## Future Work
 
 - Add a technology-specific cell library and perform static timing analysis.
 - Compare physical area and power using a suitable implementation flow.
