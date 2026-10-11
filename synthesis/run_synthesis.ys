@@ -8,8 +8,8 @@ read_verilog rtl/ripple_carry_adder.v
 read_verilog rtl/alu_rca.v
 hierarchy -check -top alu_rca
 synth -top alu_rca -flatten
-check
-tee -o reports/alu_rca_synthesis.log stat
+tee -o reports/alu_rca_synthesis.log check
+tee -a reports/alu_rca_synthesis.log stat
 tee -a reports/alu_rca_synthesis.log ltp -noff
 write_json reports/alu_rca.json
 write_verilog reports/alu_rca_synth.v
@@ -21,8 +21,8 @@ read_verilog rtl/carry_lookahead_adder.v
 read_verilog rtl/alu_cla.v
 hierarchy -check -top alu_cla
 synth -top alu_cla -flatten
-check
-tee -o reports/alu_cla_synthesis.log stat
+tee -o reports/alu_cla_synthesis.log check
+tee -a reports/alu_cla_synthesis.log stat
 tee -a reports/alu_cla_synthesis.log ltp -noff
 write_json reports/alu_cla.json
 write_verilog reports/alu_cla_synth.v
