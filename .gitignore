@@ -1,0 +1,5 @@
+sim/*.vvp
+sim/*.exe
+sim/*.vcd
+reports/*.json
+reports/*_synth.v

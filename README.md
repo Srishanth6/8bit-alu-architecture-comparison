@@ -54,12 +54,21 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 │   └── alu_cla.v
 ├── tb/
 │   └── tb_alu_comparison.v
+├── tb/
+│   └── tb_alu_wave.v
 ├── sim/
-│   └── run_simulation.bat
+│   ├── run_simulation.bat
+│   ├── run_simulation.sh
+│   └── vcd_to_png.py
+├── docs/
+│   └── alu_waveform.png
 ├── synthesis/
 │   └── run_synthesis.ys
 ├── reports/
-│   └── alu_comparison_results.txt
+│   ├── alu_comparison_results.txt
+│   ├── sim_log.txt
+│   ├── alu_rca_synthesis.log
+│   └── alu_cla_synthesis.log
 └── README.md
 ```
 
@@ -67,7 +76,28 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 
 The self-checking testbench includes a behavioral reference model and checks the RCA and CLA outputs/flags against it. Its planned coverage includes arithmetic boundary cases, signed overflow, logical operations, shifts, all 16 opcodes, and reproducible randomized inputs.
 
-The testbench is configured for 538 checks (32 directed checks and 494 randomized checks). A previously shared EDA Playground run using Icarus Verilog 12.0 reported 538 checks with zero failures. Re-run the included script after any RTL or testbench changes to confirm the result for the current checkout.
+The testbench runs 538 checks (32 all-opcode checks, 12 directed corner cases and 494 seeded randomized checks). A local run with Icarus Verilog 12.0 on 21 Oct 2026 reported **538 checks, 0 failures, `ALL TESTS PASSED`**; the full output is in [`reports/sim_log.txt`](reports/sim_log.txt). Re-run the script after any RTL or testbench change.
+
+![RCA vs CLA directed-stimulus waveform](docs/alu_waveform.png)
+
+The waveform above comes from `tb/tb_alu_wave.v`, a short directed stimulus used only for viewing (it covers signed overflow, carry-out, borrow, every logic and shift op, and one reserved opcode). It was converted from VCD to PNG with `sim/vcd_to_png.py`.
+
+### Run on Linux / macOS
+
+Requires Icarus Verilog, Yosys and Python 3 with matplotlib. From the repository root:
+
+```sh
+# 1. Self-checking simulation (538 checks)
+sh sim/run_simulation.sh
+
+# 2. Generic synthesis of both ALUs (writes reports/alu_rca_synthesis.log and reports/alu_cla_synthesis.log)
+yosys -q -s synthesis/run_synthesis.ys
+
+# 3. Waveform: VCD from the directed testbench, then PNG
+iverilog -o sim/alu_wave.vvp rtl/full_adder.v rtl/ripple_carry_adder.v rtl/carry_lookahead_adder.v rtl/alu_rca.v rtl/alu_cla.v tb/tb_alu_wave.v
+vvp sim/alu_wave.vvp
+python3 sim/vcd_to_png.py   # writes docs/alu_waveform.png
+```
 
 ### Run on Windows
 
@@ -82,28 +112,32 @@ A successful run should show zero failures and `ALL TESTS PASSED`.
 
 ## Generic Synthesis Comparison
 
-The archived comparison below records a Yosys 0.33 run using generic ABC mapping, a flattened synthesis flow, and `ltp -noff` for topological logic-depth analysis. The updated script now follows that analysis sequence for both ALUs and writes per-ALU logs. The archived numbers have **not yet been freshly regenerated from the updated script**, so treat them as recorded results until you run the script and compare the new logs.
+The table below comes from running `synthesis/run_synthesis.ys` unchanged with **Yosys 0.52** on 21 Oct 2026. The flow is generic `synth -flatten` with internal ABC gate mapping, followed by `check`, `stat` and `ltp -noff`. The logs are in [`reports/alu_rca_synthesis.log`](reports/alu_rca_synthesis.log) and [`reports/alu_cla_synthesis.log`](reports/alu_cla_synthesis.log).
 
-| Metric | RCA ALU | CLA ALU |
+| Metric (Yosys 0.52) | RCA ALU | CLA ALU |
 |---|---:|---:|
-| Generic mapped logic cells | 287 | 398 |
-| Longest topological path | 29 | 19 |
-| Wires | 342 | 411 |
-| Structural problems reported | 0 | 0 |
+| Total cells reported by `stat` | 391 | 469 |
+| of which `$scopeinfo` (non-logic hierarchy markers) | 18 | 2 |
+| Generic logic gate cells | 373 | 467 |
+| Longest topological path (`ltp -noff`) | 28 | 18 |
+| Wires | 415 | 472 |
+| Problems reported by `check` | 0 | 0 |
 
-The reported longest topological path decreased from 29 to 19 levels, a reduction of approximately 34.48%:
+The longest topological path drops from 28 to 18 levels, about 35.7%:
 
 \[
-\frac{29-19}{29}\times100\approx34.48\%
+\frac{28-18}{28}\times100\approx35.7\%
 \]
 
-In this synthesis run, the CLA used more generic mapped logic cells but had a shorter reported topological path. These metrics describe the complete ALU implementations, not isolated adder blocks.
+**Historical: log not available, not reproduced.** An earlier Yosys 0.33 run recorded 287 vs 398 generic mapped cells, 29 vs 19 levels and 342 vs 411 wires. No log from that run exists and the numbers were not reproduced here, so treat them as unverified. They point the same way as the 0.52 run (CLA: more cells, shorter path).
+
+In both runs, the CLA used more generic mapped logic cells but had a shorter reported topological path. These metrics describe the complete ALU implementations, not isolated adder blocks.
 
 ### Interpreting the RCA-versus-CLA Trade-off
 
 A ripple-carry adder computes each carry from the previous stage, so the carry dependency can extend through the 8-bit datapath. A carry-lookahead adder computes carries using generate/propagate relationships, reducing the dependency depth at the expense of more logic.
 
-That trade-off is reflected in the **archived generic synthesis run**: the complete CLA ALU has more generic mapped logic cells (398 versus 287), while its reported topological path is shorter (19 versus 29 levels). The path-length reduction is approximately 34.48%. This does not prove a 34.48% reduction in real circuit delay; actual timing depends on cell delays, loading, routing, and constraints.
+That trade-off shows up in the Yosys 0.52 run: the complete CLA ALU has more generic logic cells (467 versus 373), while its reported topological path is shorter (18 versus 28 levels), a reduction of about 35.7%. This does not prove a 35.7% reduction in real circuit delay; actual timing depends on cell delays, loading, routing, and constraints.
 
 ### Limitations
 
@@ -111,7 +145,7 @@ That trade-off is reflected in the **archived generic synthesis run**: the compl
 - Generic mapped cell count is not physical silicon area.
 - Power has not been measured.
 - Physical PPA requires an appropriate target-cell library, constraints, and technology-specific implementation/timing analysis.
-- Exact generic counts and logic-depth values can vary with Yosys/ABC versions. Re-run the script and inspect `reports/alu_rca_synthesis.log` and `reports/alu_cla_synthesis.log` before replacing the archived table.
+- Exact generic counts and logic-depth values vary with Yosys/ABC version (0.33 and 0.52 give different numbers, as shown above).
 
 Details are in `reports/alu_comparison_results.txt`.
 
@@ -126,8 +160,8 @@ yosys -s synthesis/run_synthesis.ys
 ## Key Takeaways
 
 - Implemented two 8-bit ALU architectures with the same operation set and status flags.
-- The recorded self-checking simulation reported 538 checks with zero failures.
-- The archived generic synthesis comparison shows a resource-versus-logic-depth trade-off: CLA uses more generic logic cells but has a shorter reported topological path.
+- The self-checking simulation passed 538 of 538 checks (log committed).
+- The generic synthesis comparison shows a resource-versus-logic-depth trade-off: CLA uses more generic logic cells but has a shorter reported topological path.
 - Generic synthesis statistics do not establish physical area, power, or delay in nanoseconds.
 
 ## Physical PPA: Scope and Measurement Plan
@@ -157,4 +191,4 @@ Designed an 8-bit ALU in Verilog using Ripple-Carry and Carry-Lookahead adder ar
 
 ## License
 
-Student project for educational and portfolio demonstration.
+Student project for educational and portfolio demonstration. No licence specified.

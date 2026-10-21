@@ -1,0 +1,62 @@
+
+6. Executing CHECK pass (checking for obvious problems).
+Checking module alu_rca...
+Found and reported 0 problems.
+
+7. Printing statistics.
+
+=== alu_rca ===
+
+   Number of wires:                415
+   Number of wire bits:            467
+   Number of public wires:          54
+   Number of public wire bits:     106
+   Number of ports:                  8
+   Number of port bits:             32
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                391
+     $_ANDNOT_                     152
+     $_AND_                         19
+     $_NAND_                        20
+     $_NOR_                         38
+     $_NOT_                          3
+     $_ORNOT_                       18
+     $_OR_                          99
+     $_XNOR_                        20
+     $_XOR_                          4
+     $scopeinfo                     18
+
+8. Executing LTP pass (find longest path).
+
+Longest topological path in alu_rca (length=28):
+    0: \B [0]
+    1: $abc$957$new_n45 (via $abc$957$auto$blifparse.cc:396:parse_blif$970)
+    2: $abc$957$new_n46 (via $abc$957$auto$blifparse.cc:396:parse_blif$971)
+    3: $abc$957$new_n47 (via $abc$957$auto$blifparse.cc:396:parse_blif$972)
+    4: $abc$957$new_n49 (via $abc$957$auto$blifparse.cc:396:parse_blif$974)
+    5: $abc$957$new_n50 (via $abc$957$auto$blifparse.cc:396:parse_blif$975)
+    6: $abc$957$new_n51 (via $abc$957$auto$blifparse.cc:396:parse_blif$976)
+    7: $abc$957$new_n53 (via $abc$957$auto$blifparse.cc:396:parse_blif$978)
+    8: $abc$957$new_n54 (via $abc$957$auto$blifparse.cc:396:parse_blif$979)
+    9: $abc$957$new_n55 (via $abc$957$auto$blifparse.cc:396:parse_blif$980)
+   10: $abc$957$new_n57 (via $abc$957$auto$blifparse.cc:396:parse_blif$982)
+   11: $abc$957$new_n58 (via $abc$957$auto$blifparse.cc:396:parse_blif$983)
+   12: $abc$957$new_n59 (via $abc$957$auto$blifparse.cc:396:parse_blif$984)
+   13: $abc$957$new_n61 (via $abc$957$auto$blifparse.cc:396:parse_blif$986)
+   14: $abc$957$new_n62 (via $abc$957$auto$blifparse.cc:396:parse_blif$987)
+   15: $abc$957$new_n63 (via $abc$957$auto$blifparse.cc:396:parse_blif$988)
+   16: $abc$957$new_n65 (via $abc$957$auto$blifparse.cc:396:parse_blif$990)
+   17: $abc$957$new_n66 (via $abc$957$auto$blifparse.cc:396:parse_blif$991)
+   18: $abc$957$new_n67 (via $abc$957$auto$blifparse.cc:396:parse_blif$992)
+   19: $abc$957$new_n69 (via $abc$957$auto$blifparse.cc:396:parse_blif$994)
+   20: $abc$957$new_n70 (via $abc$957$auto$blifparse.cc:396:parse_blif$995)
+   21: $abc$957$new_n234 (via $abc$957$auto$blifparse.cc:396:parse_blif$1159)
+   22: $abc$957$new_n235 (via $abc$957$auto$blifparse.cc:396:parse_blif$1160)
+   23: $abc$957$new_n236 (via $abc$957$auto$blifparse.cc:396:parse_blif$1161)
+   24: $abc$957$new_n237 (via $abc$957$auto$blifparse.cc:396:parse_blif$1162)
+   25: $abc$957$new_n252 (via $abc$957$auto$blifparse.cc:396:parse_blif$1177)
+   26: $abc$957$new_n253 (via $abc$957$auto$blifparse.cc:396:parse_blif$1178)
+   27: $abc$957$new_n254 (via $abc$957$auto$blifparse.cc:396:parse_blif$1179)
+   28: \Zero (via $abc$957$auto$blifparse.cc:396:parse_blif$1180)

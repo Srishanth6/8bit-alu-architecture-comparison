@@ -1,8 +1,23 @@
 8-bit ALU Architecture Comparison
 =================================
 
-Archived run
-------------
+Reproduced run (21 Oct 2026)
+----------------------------
+Tool: Yosys 0.52, script synthesis/run_synthesis.ys unchanged
+
+Metric                         RCA       CLA
+Total cells (stat)             391       469
+  $scopeinfo markers            18         2
+Generic logic gate cells       373       467
+Longest topological path       28        18
+Wires                          415       472
+Problems (check)               0         0
+
+Logic-depth reduction: ((28 - 18) / 28) * 100 = 35.7%
+Simulation: Icarus Verilog 12.0, 538 checks, 0 failures (reports/sim_log.txt)
+
+Historical run: log not available, not reproduced
+-------------------------------------------------
 Tool: Yosys 0.33
 Flow: synth with flattening, followed by ltp -noff
 Mapping: Generic ABC gate mapping
@@ -22,13 +37,9 @@ but uses more generic mapped logic cells than the RCA.
 
 Reproducibility status
 ----------------------
-The synthesis script at synthesis/run_synthesis.ys has been aligned to
-synthesize each complete ALU with flattening, run check, collect stat
-and ltp -noff output, and save per-ALU logs. The archived values above
-have not yet been regenerated from that updated script. Re-run the
-script and compare reports/alu_rca_synthesis.log and
-reports/alu_cla_synthesis.log before treating the table as reproduced.
-Exact values may vary with Yosys/ABC versions.
+The Yosys 0.52 numbers come from the committed logs. The 0.33 numbers
+could not be regenerated (that Yosys version was not used again), and
+they differ in absolute value but not in the direction of the trade-off.
 
 Limitations
 -----------
