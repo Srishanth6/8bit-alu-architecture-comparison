@@ -1,3 +1,5 @@
+// Self-checking testbench: compares alu_rca and alu_cla against a behavioural
+// reference model (all opcodes, directed corner cases, seeded random inputs).
 `timescale 1ns/1ps
 
 module tb_alu_comparison;

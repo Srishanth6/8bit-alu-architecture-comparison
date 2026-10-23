@@ -1,3 +1,4 @@
+// 1-bit full adder: Sum = A ^ B ^ Cin, Cout = majority(A, B, Cin).
 module full_adder (
     input  A,
     input  B,

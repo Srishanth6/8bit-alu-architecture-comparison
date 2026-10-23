@@ -1,3 +1,6 @@
+"""Convert sim/alu_wave.vcd (from tb/tb_alu_wave.v) into docs/alu_waveform.png.
+Run from the repository root:  python3 sim/vcd_to_png.py  (needs matplotlib)
+"""
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 ids={}; ch={}; t=0; depth=0; ts=1
 lines=open('sim/alu_wave.vcd').read().split('\n')

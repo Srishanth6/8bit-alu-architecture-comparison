@@ -1,3 +1,5 @@
+// 8-bit ALU using carry_lookahead_adder for ADD/SUB. Same opcodes and flags
+// as alu_rca so the two can be compared directly.
 module alu_cla (
     input  [7:0] A,
     input  [7:0] B,

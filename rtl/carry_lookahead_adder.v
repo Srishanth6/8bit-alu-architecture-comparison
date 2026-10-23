@@ -1,3 +1,5 @@
+// 8-bit carry-lookahead adder: carries computed from generate (G = A&B)
+// and propagate (P = A^B) terms using expanded lookahead equations.
 module carry_lookahead_adder (
     input  [7:0] A,
     input  [7:0] B,

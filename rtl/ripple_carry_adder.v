@@ -1,3 +1,4 @@
+// 8-bit ripple-carry adder: eight full_adder stages chained carry-to-carry.
 module ripple_carry_adder (
     input  [7:0] A,
     input  [7:0] B,

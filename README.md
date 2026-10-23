@@ -53,9 +53,8 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 │   ├── alu_rca.v
 │   └── alu_cla.v
 ├── tb/
-│   └── tb_alu_comparison.v
-├── tb/
-│   └── tb_alu_wave.v
+│   ├── tb_alu_comparison.v   # self-checking testbench (538 checks)
+│   └── tb_alu_wave.v         # short directed stimulus for the waveform
 ├── sim/
 │   ├── run_simulation.bat
 │   ├── run_simulation.sh
@@ -74,7 +73,7 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 
 ## Simulation and Verification
 
-The self-checking testbench includes a behavioral reference model and checks the RCA and CLA outputs/flags against it. Its planned coverage includes arithmetic boundary cases, signed overflow, logical operations, shifts, all 16 opcodes, and reproducible randomized inputs.
+The self-checking testbench includes a behavioral reference model and checks the RCA and CLA outputs/flags against it. It covers arithmetic boundary cases, signed overflow, logical operations, shifts, all 16 opcodes, and reproducible randomized inputs.
 
 The testbench runs 538 checks (32 all-opcode checks, 12 directed corner cases and 494 seeded randomized checks). A local run with Icarus Verilog 12.0 on 21 Oct 2026 reported **538 checks, 0 failures, `ALL TESTS PASSED`**; the full output is in [`reports/sim_log.txt`](reports/sim_log.txt). Re-run the script after any RTL or testbench change.
 
@@ -101,14 +100,14 @@ python3 sim/vcd_to_png.py   # writes docs/alu_waveform.png
 
 ### Run on Windows
 
-1. Install Icarus Verilog and ensure `iverilog` and `vvp` are available in PATH.
+1. Install Icarus Verilog and make sure `iverilog` and `vvp` are on PATH.
 2. From the project root, run:
 
    ```bat
    sim\run_simulation.bat
    ```
 
-A successful run should show zero failures and `ALL TESTS PASSED`.
+A successful run should show zero failures and `ALL TESTS PASSED`. For synthesis on Windows, run `yosys -s synthesis/run_synthesis.ys` from the repository root (drop `-q` to see the full log).
 
 ## Generic Synthesis Comparison
 
@@ -148,14 +147,6 @@ That trade-off shows up in the Yosys 0.52 run: the complete CLA ALU has more gen
 - Exact generic counts and logic-depth values vary with Yosys/ABC version (0.33 and 0.52 give different numbers, as shown above).
 
 Details are in `reports/alu_comparison_results.txt`.
-
-## Running the Yosys Script
-
-With Yosys installed, run from the repository root:
-
-```bash
-yosys -s synthesis/run_synthesis.ys
-```
 
 ## Key Takeaways
 

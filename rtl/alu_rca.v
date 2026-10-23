@@ -1,3 +1,5 @@
+// 8-bit ALU using ripple_carry_adder for ADD/SUB. Opcode map and flag
+// definitions are documented in README.md.
 module alu_rca (
     input  [7:0] A,
     input  [7:0] B,

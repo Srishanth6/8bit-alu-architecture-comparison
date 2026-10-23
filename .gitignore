@@ -3,3 +3,11 @@ sim/*.exe
 sim/*.vcd
 reports/*.json
 reports/*_synth.v
+
+# Editor / OS / Python junk
+__pycache__/
+*.pyc
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
