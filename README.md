@@ -68,6 +68,7 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 │   ├── sim_log.txt
 │   ├── alu_rca_synthesis.log
 │   └── alu_cla_synthesis.log
+├── LICENSE
 └── README.md
 ```
 
@@ -182,4 +183,4 @@ Designed an 8-bit ALU in Verilog using Ripple-Carry and Carry-Lookahead adder ar
 
 ## License
 
-Student project for educational and portfolio demonstration. No licence specified.
+MIT, see [LICENSE](LICENSE). Copyright (c) 2026 B. Srishanth Reddy.
