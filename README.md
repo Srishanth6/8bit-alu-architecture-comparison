@@ -69,6 +69,7 @@ Both ALUs instantiate separate adder units for addition and subtraction to keep 
 │   ├── alu_rca_synthesis.log
 │   └── alu_cla_synthesis.log
 ├── LICENSE
+├── .github/workflows/ci.yml
 └── README.md
 ```
 

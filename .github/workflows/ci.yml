@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  simulate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+          iverilog -V 2>&1 | head -1
+      - name: Run self-checking testbench
+        run: |
+          mkdir -p sim
+          iverilog -g2012 -o sim/alu_sim rtl/full_adder.v rtl/ripple_carry_adder.v rtl/carry_lookahead_adder.v rtl/alu_rca.v rtl/alu_cla.v tb/tb_alu_comparison.v
+          vvp -n sim/alu_sim | tee sim/ci_sim.log
+          grep -q "ALL TESTS PASSED" sim/ci_sim.log
+
+  synth:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Yosys
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yosys
+          yosys -V
+      - name: Generic synthesis (Yosys)
+        run: yosys -s synthesis/run_synthesis.ys
